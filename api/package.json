@@ -14,5 +14,10 @@
     "backpack-core": "^0.8.3",
     "express": "^4.16.4",
     "graphql": "^14.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.13.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0"
   }
 }
