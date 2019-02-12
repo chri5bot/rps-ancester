@@ -1,7 +1,7 @@
 
-import dotenv from 'dotenv';
 import { ApolloServer } from 'apollo-server';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import config from './config';
 import schema from './schema';
 
