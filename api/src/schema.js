@@ -1,4 +1,4 @@
-import { makeExecutableSchema, gql } from 'apollo-server';
+import { makeExecutableSchema, gql } from 'apollo-server-express';
 import { merge } from 'lodash';
 
 import User from './types/User';

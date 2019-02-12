@@ -1,6 +1,8 @@
 
-import { ApolloServer } from 'apollo-server';
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
 import jwt from 'jsonwebtoken';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import config from './config';
 import schema from './schema';
@@ -35,7 +37,10 @@ const server = new ApolloServer({
   },
 });
 
-server.listen(config.API_PORT).then(({ url }) => {
-  // eslint-disable-next-line no-console
-  console.log(`🚀  API ready at ${url}`);
-});
+const app = express();
+app.use(cors());
+app.set('PORT', config.API_PORT || 4000);
+server.applyMiddleware({ app });
+
+// eslint-disable-next-line no-console
+app.listen(app.get('PORT'), () => console.log(`🚀 Server ready at http://localhost:${app.get('PORT')}`));
