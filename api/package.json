@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "backpack-core": "^0.8.3"
+    "apollo-server-express": "^2.4.0",
+    "backpack-core": "^0.8.3",
+    "express": "^4.16.4",
+    "graphql": "^14.1.1"
   }
 }
