@@ -1,24 +1,41 @@
-import express from 'express';
-import { ApolloServer, gql } from 'apollo-server-express';
 
-// Construct a schema, using GraphQL schema language
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
+import dotenv from 'dotenv';
+import { ApolloServer } from 'apollo-server';
+import jwt from 'jsonwebtoken';
+import config from './config';
+import schema from './schema';
 
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
+dotenv.config();
+
+const server = new ApolloServer({
+  schema,
+  context: async ({ req }) => {
+    const token = req.headers.authorization;
+
+    if (!token) {
+      return;
+    }
+
+    const user = await new Promise((resolve, reject) => {
+      if (!config.JWT_SECRET) {
+        return;
+      }
+      // eslint-disable-next-line consistent-return
+      jwt.verify(token, config.JWT_SECRET, (err, decoded) => {
+        if (err) {
+          return reject(err);
+        }
+
+        resolve(decoded.username);
+      });
+    });
+
+    // eslint-disable-next-line consistent-return
+    return { user };
   },
-};
+});
 
-const server = new ApolloServer({ typeDefs, resolvers });
-
-const app = express();
-server.applyMiddleware({ app });
-
-// eslint-disable-next-line no-console
-app.listen({ port: 4000 }, () => console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`));
+server.listen(config.API_PORT).then(({ url }) => {
+  // eslint-disable-next-line no-console
+  console.log(`🚀  API ready at ${url}`);
+});
