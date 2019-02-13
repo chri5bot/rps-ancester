@@ -25,7 +25,7 @@ export const createClient = () => {
 
   const link = errorsLink.concat(
     createUploadLink({
-      uri: `${API_URL  }/graphql`
+      uri: `${API_URL}/graphql`
     })
   )
 

@@ -9,7 +9,7 @@ import schema from './schema';
 
 dotenv.config();
 
-const server = new ApolloServer({
+const apolloServer = new ApolloServer({
   schema,
   context: async ({ req }) => {
     const token = req.headers.authorization;
@@ -40,7 +40,8 @@ const server = new ApolloServer({
 const app = express();
 app.use(cors());
 app.set('PORT', config.API_PORT || 4000);
-server.applyMiddleware({ app });
+
+apolloServer.applyMiddleware({ app });
 
 // eslint-disable-next-line no-console
 app.listen(app.get('PORT'), () => console.log(`🚀 Server ready at http://localhost:${app.get('PORT')}`));
