@@ -1,9 +1,13 @@
 import { ApolloClient } from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { onError } from 'apollo-link-error'
-import { createUploadLink } from 'apollo-upload-client'
+// import { createUploadLink } from 'apollo-upload-client'
 import { setContext } from 'apollo-link-context'
-import { API_URL } from './config'
+import { HttpLink } from 'apollo-link-http'
+import { WebSocketLink } from 'apollo-link-ws'
+import { ApolloLink, split } from 'apollo-link'
+import { getMainDefinition } from 'apollo-utilities'
+// import { API_URL } from './config'
 
 // eslint-disable-next-line import/prefer-default-export
 export const createClient = () => {
@@ -23,11 +27,31 @@ export const createClient = () => {
     }
   })
 
-  const link = errorsLink.concat(
-    createUploadLink({
-      uri: `${API_URL}/graphql`
+  const httpLink = errorsLink.concat(
+    new HttpLink({
+      uri: 'http://localhost:3001/graphql'
     })
   )
+
+  const wsLink = errorsLink.concat(
+    new WebSocketLink({
+      uri: `ws://localhost:3001/graphql`,
+      options: {
+        reconnect: true
+      }
+    })
+  )
+
+  const terminatingLink = split(
+    ({ query }) => {
+      const { kind, operation } = getMainDefinition(query)
+      return kind === 'OperationDefinition' && operation === 'subscription'
+    },
+    wsLink,
+    httpLink
+  )
+
+  const link = ApolloLink.from([terminatingLink])
 
   const authLink = setContext((_, { headers }) => {
     const token = window.sessionStorage.getItem('token')

@@ -30,6 +30,7 @@ export default function LoginForm({ history, location }) {
     <Mutation mutation={LOGIN_USER_MUTATION}>
       {(loginUser, { loading }) => (
         <form
+          method="post"
           onSubmit={async e => {
             e.preventDefault()
             try {
