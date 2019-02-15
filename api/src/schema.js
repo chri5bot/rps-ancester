@@ -7,8 +7,10 @@ import Message from './types/Message';
 import MessageQueries from './queries/message';
 
 import UserMutations from './mutations/user';
+// eslint-disable-next-line import/no-cycle
 import MessageMutations from './mutations/message';
 
+// eslint-disable-next-line import/no-cycle
 import MessageSubscriptions from './subscriptions/message';
 
 

@@ -75,8 +75,7 @@ export default class Home extends Component {
         <Subscription subscription={MESSAGE_SUBSCRIPTION}>
           {({ data, loading }) => (
             <div>
-              {!loading && data && console.log(data)}
-              <p>new message: {!loading && data}</p>
+              <p>new message: {!loading && data.messageCreated.text}</p>
             </div>
           )}
         </Subscription>

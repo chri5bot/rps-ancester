@@ -7,6 +7,8 @@ import jwt from 'jsonwebtoken';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import config from './config';
+
+// eslint-disable-next-line import/no-cycle
 import schema from './schema';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -62,6 +64,8 @@ const httpServer = createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
 httpServer.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
+  // eslint-disable-next-line no-console
   console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`);
 });
