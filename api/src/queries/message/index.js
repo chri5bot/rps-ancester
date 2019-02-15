@@ -1,7 +1,7 @@
-import allMessages from './allMessages';
+import messages from './messages';
 
 export default {
   Query: {
-    allMessages,
+    messages,
   },
 };

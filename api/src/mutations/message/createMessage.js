@@ -1,8 +1,8 @@
-import { PubSub } from 'apollo-server-express';
+
 
 import MESSAGE_CREATED from '../../topics/message/index';
+import { pubsub } from '../../index';
 
-const pubsub = new PubSub();
 
 export default async (_, args) => {
   const { text } = await args.input;

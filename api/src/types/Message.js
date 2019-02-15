@@ -18,6 +18,6 @@ export default gql`
   }
 
   extend type Query {
-    allMessages : [Message]
+    messages : [Message]
   }
 `;

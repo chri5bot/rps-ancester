@@ -2,12 +2,15 @@
 
 import { createServer } from 'http';
 import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer, PubSub } from 'apollo-server-express';
 import jwt from 'jsonwebtoken';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import config from './config';
 import schema from './schema';
+
+// eslint-disable-next-line import/prefer-default-export
+export const pubsub = new PubSub();
 
 dotenv.config();
 
@@ -16,7 +19,7 @@ const PORT = config.API_PORT || 4000;
 const app = express();
 app.use(cors());
 
-const apolloServer = new ApolloServer({
+const server = new ApolloServer({
   schema,
   context: async ({ req, connection }) => {
     if (connection) {
@@ -46,14 +49,19 @@ const apolloServer = new ApolloServer({
     // eslint-disable-next-line consistent-return
     return { user };
   },
+  playground: {
+    settings: {
+      'editor.theme': 'light',
+    },
+  },
 });
 
-apolloServer.applyMiddleware({ app });
+server.applyMiddleware({ app });
 
 const httpServer = createServer(app);
-apolloServer.installSubscriptionHandlers(httpServer);
+server.installSubscriptionHandlers(httpServer);
 
 httpServer.listen(PORT, () => {
-  console.log(`🚀 Server ready at http://localhost:${PORT}${apolloServer.graphqlPath}`);
-  console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}${apolloServer.subscriptionsPath}`);
+  console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
+  console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`);
 });
