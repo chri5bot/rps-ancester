@@ -35,7 +35,7 @@ export const createClient = () => {
 
   const wsLink = errorsLink.concat(
     new WebSocketLink({
-      uri: `ws://localhost:3001/graphql`,
+      uri: 'ws://localhost:3001/graphql',
       options: {
         reconnect: true
       }
