@@ -20,7 +20,8 @@ const MESSAGE_SUBSCRIPTION = gql`
 
 export default class Home extends Component {
   state = {
-    text: ''
+    text: '',
+    isDisconnected: false
   }
 
   componentDidMount() {
@@ -36,16 +37,20 @@ export default class Home extends Component {
   }
 
   render() {
-    const { text } = this.state
+    const { text, isDisconnected } = this.state
     return (
       <React.Fragment>
         <Mutation
           mutation={MESSAGE_MUTATION}
           onCompleted={() => {
-            console.log('everithing is completed')
+            // eslint-disable-next-line no-unused-expressions
+            !window.sessionStorage.token &&
+              this.setState({ isDisconnected: true })
           }}
           onError={() => {
-            console.log('have an error')
+            // eslint-disable-next-line no-unused-expressions
+            !window.sessionStorage.token &&
+              this.setState({ isDisconnected: true })
           }}
         >
           {(createMessage, { loading }) => (
@@ -72,6 +77,7 @@ export default class Home extends Component {
             </form>
           )}
         </Mutation>
+        {isDisconnected && <p>disconnected</p>}
         <Subscription subscription={MESSAGE_SUBSCRIPTION}>
           {({ data, loading }) => (
             <div>
