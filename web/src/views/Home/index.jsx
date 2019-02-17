@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Subscription } from 'react-apollo'
 import gql from 'graphql-tag'
 import IconButton from './components/IconButton'
+import { Wrapper, ResultTitle } from './style'
 
 const MESSAGE_SUBSCRIPTION = gql`
   subscription {
@@ -52,7 +53,7 @@ export default class Home extends Component {
   render() {
     const { isDisconnected, yourChoice, rivalChoice } = this.state
     return (
-      <React.Fragment>
+      <Wrapper>
         <Subscription
           subscription={MESSAGE_SUBSCRIPTION}
           onSubscriptionData={options => {
@@ -64,13 +65,15 @@ export default class Home extends Component {
               this.setState({ rivalChoice: messageCreated.text })
           }}
         />
-        {isDisconnected && <p>disconnected</p>}
-        <p>your choice: {yourChoice}</p>
-        <p>rival choice: {rivalChoice}</p>
+        {isDisconnected && <p>DISCONNECTED</p>}
 
         {yourChoice && rivalChoice && (
-          <p>{this.handleRockPapperSissorsGame(yourChoice, rivalChoice)}</p>
+          <ResultTitle>
+            {this.handleRockPapperSissorsGame(yourChoice, rivalChoice)}
+          </ResultTitle>
         )}
+        <p>YOU: {yourChoice}</p>
+        <p>RIVAL: {rivalChoice}</p>
 
         <IconButton
           text="Rock"
@@ -87,7 +90,7 @@ export default class Home extends Component {
           handleYourChoiceChange={this.handleYourChoiceChange}
           handleIsDisconnectedChange={this.handleIsDisconnectedChange}
         />
-      </React.Fragment>
+      </Wrapper>
     )
   }
 }

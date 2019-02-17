@@ -1,6 +1,7 @@
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
+import { Button } from '../../style'
 
 const MESSAGE_MUTATION = gql`
   mutation createMessageMutation($input: createMessageInput!) {
@@ -30,7 +31,7 @@ export default function IconButton({
       }}
     >
       {(createMessage, { loading }) => (
-        <button
+        <Button
           type="button"
           disabled={!text}
           onClick={() => {
@@ -49,7 +50,7 @@ export default function IconButton({
           }}
         >
           {loading ? 'Loading...' : text}
-        </button>
+        </Button>
       )}
     </Mutation>
   )
