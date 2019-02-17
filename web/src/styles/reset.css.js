@@ -2,23 +2,22 @@ import { createGlobalStyle } from 'styled-components'
 
 // eslint-disable-next-line import/prefer-default-export
 export const GlobalStyle = createGlobalStyle`
+    html, body, #root, #root>div {
+    height: 100%
+    }
     html, body {
         margin: 0;
         padding: 0;
         overflow: hidden;
     }  
     body {
-        font-family: 'Ubuntu', sans-serif;
-        font-size: 14px;
-        background-color: #f3f3f3;
-        -webkit-font-smoothing: antialiased;
+        font-family: 'Nueu', sans-serif;
+        background-color: white;
+        font-size: 12px;
+        -webkit-font-smoothing: antialiased;  
     }
     *, ::after, ::before {
         box-sizing: border-box;
-    }
-    input, textarea, button {
-        font-family: 'Ubuntu',sans-serif;
-        font-size: 18px;
     }
     p {
         margin-top: 0;
