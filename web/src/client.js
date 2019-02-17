@@ -7,7 +7,7 @@ import { HttpLink } from 'apollo-link-http'
 import { WebSocketLink } from 'apollo-link-ws'
 import { ApolloLink, split } from 'apollo-link'
 import { getMainDefinition } from 'apollo-utilities'
-// import { API_URL } from './config'
+import { API_URL, WS_URL } from './config'
 
 // eslint-disable-next-line import/prefer-default-export
 export const createClient = () => {
@@ -29,13 +29,13 @@ export const createClient = () => {
 
   const httpLink = errorsLink.concat(
     new HttpLink({
-      uri: 'http://localhost:3001/graphql'
+      uri: API_URL
     })
   )
 
   const wsLink = errorsLink.concat(
     new WebSocketLink({
-      uri: 'ws://localhost:3001/graphql',
+      uri: WS_URL,
       options: {
         reconnect: true
       }
