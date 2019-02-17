@@ -1,18 +1,12 @@
 import React, { Component } from 'react'
+import { Subscription } from 'react-apollo'
 import gql from 'graphql-tag'
-import { Mutation, Subscription } from 'react-apollo'
-
-const MESSAGE_MUTATION = gql`
-  mutation createMessageMutation($input: createMessageInput!) {
-    createMessage(input: $input) {
-      text
-    }
-  }
-`
+import IconButton from './components/IconButton'
 
 const MESSAGE_SUBSCRIPTION = gql`
   subscription {
     messageCreated {
+      id
       text
     }
   }
@@ -20,71 +14,79 @@ const MESSAGE_SUBSCRIPTION = gql`
 
 export default class Home extends Component {
   state = {
-    text: '',
+    yourChoice: '',
+    rivalChoice: '',
     isDisconnected: false
   }
 
-  componentDidMount() {
-    this.subscribe()
+  handleIsDisconnectedChange = isDisconnected => {
+    this.setState({ isDisconnected })
   }
 
-  subscribe = () => {
-    console.log('hey')
+  handleYourChoiceChange = yourChoice => {
+    this.setState({ yourChoice })
   }
 
-  handleTextChange = e => {
-    this.setState({ text: e.target.value })
+  handleRockPapperSissorsGame = (yourChoice, rivalChoice) => {
+    let result = 'you lose'
+
+    if (yourChoice === rivalChoice) {
+      result = 'draw'
+    }
+
+    if (yourChoice === 'Scissors' && rivalChoice === 'Paper') {
+      result = 'you win'
+    }
+
+    if (yourChoice === 'Paper' && rivalChoice === 'Rock') {
+      result = 'you win'
+    }
+
+    if (yourChoice === 'Rock' && rivalChoice === 'Scissors') {
+      result = 'you win'
+    }
+
+    return result
   }
 
   render() {
-    const { text, isDisconnected } = this.state
+    const { isDisconnected, yourChoice, rivalChoice } = this.state
     return (
       <React.Fragment>
-        <Mutation
-          mutation={MESSAGE_MUTATION}
-          onCompleted={() => {
-            // eslint-disable-next-line no-unused-expressions
-            !window.sessionStorage.token &&
-              this.setState({ isDisconnected: true })
-          }}
-          onError={() => {
-            // eslint-disable-next-line no-unused-expressions
-            !window.sessionStorage.token &&
-              this.setState({ isDisconnected: true })
-          }}
-        >
-          {(createMessage, { loading }) => (
-            <form>
-              <input value={text} onChange={this.handleTextChange} />
-              <button
-                type="button"
-                disabled={!text}
-                onClick={() => {
-                  if (!text) {
-                    // eslint-disable-next-line no-useless-return
-                    return
-                  }
+        <Subscription
+          subscription={MESSAGE_SUBSCRIPTION}
+          onSubscriptionData={options => {
+            const { messageCreated } = options.subscriptionData.data
 
-                  createMessage({
-                    variables: {
-                      input: { text }
-                    }
-                  })
-                }}
-              >
-                {loading ? 'Loading...' : 'Create Message'}
-              </button>
-            </form>
-          )}
-        </Mutation>
+            // eslint-disable-next-line no-unused-expressions
+            messageCreated &&
+              messageCreated.id !== window.sessionStorage.token &&
+              this.setState({ rivalChoice: messageCreated.text })
+          }}
+        />
         {isDisconnected && <p>disconnected</p>}
-        <Subscription subscription={MESSAGE_SUBSCRIPTION}>
-          {({ data, loading }) => (
-            <div>
-              <p>new message: {!loading && data.messageCreated.text}</p>
-            </div>
-          )}
-        </Subscription>
+        <p>your choice: {yourChoice}</p>
+        <p>rival choice: {rivalChoice}</p>
+
+        {yourChoice && rivalChoice && (
+          <p>{this.handleRockPapperSissorsGame(yourChoice, rivalChoice)}</p>
+        )}
+
+        <IconButton
+          text="Rock"
+          handleYourChoiceChange={this.handleYourChoiceChange}
+          handleIsDisconnectedChange={this.handleIsDisconnectedChange}
+        />
+        <IconButton
+          text="Paper"
+          handleYourChoiceChange={this.handleYourChoiceChange}
+          handleIsDisconnectedChange={this.handleIsDisconnectedChange}
+        />
+        <IconButton
+          text="Scissors"
+          handleYourChoiceChange={this.handleYourChoiceChange}
+          handleIsDisconnectedChange={this.handleIsDisconnectedChange}
+        />
       </React.Fragment>
     )
   }
