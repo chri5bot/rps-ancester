@@ -17,4 +17,4 @@ Abre http://localhost:3000/ para visulizar el cliente de ReactJs.
 
 ### GitHub
 
-Proyecto en repositorio https://github.com/chri5bot/rps-ancester
+Proyecto en repositorio https://github.com/chri5bot/rps-ancester.
